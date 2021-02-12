@@ -6,7 +6,7 @@
 
 ## ERD Diagram
 
-![screenshot](./docs/ERDdiagram.png)
+![screenshot](./docs/ERDdiagram2.png)
 
 ## Built With
 
