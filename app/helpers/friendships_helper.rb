@@ -1,4 +1,3 @@
-# rubocop:disable Style/GuardClause
 module FriendshipsHelper
   def friendship_exist?(user, friend)
     Friendship.where(requestor_id: user, requested_id: friend, status: false).first
@@ -24,17 +23,21 @@ module FriendshipsHelper
   end
 
   def make_request(current, user)
-    if current != user
-      if friendship_exist?(current, user)
-        'Waiting for response'
-      elsif status?(current, user)
-        'You are friends'
-      elsif !friendship_exist?(current, user) && !friendship_exist?(user, current)
-        link_to 'Request Friendship',
-                friendships_path(requestor_id: current, requested_id: user),
-                method: :create,
-                class: 'friend'
-      end
+    return 'Waiting for response' if friendship_exist?(current, user) && current != user
+
+    return 'You are friends' if status?(current, user) && current != user
+
+    can_request(current, user) if current != user
+  end
+
+  # rubocop:disable Style/GuardClause
+
+  def can_request(current, user)
+    if !friendship_exist?(current, user) && !friendship_exist?(user, current)
+      link_to 'Request Friendship',
+              friendships_path(requestor_id: current, requested_id: user),
+              method: :create,
+              class: 'friend'
     end
   end
 
