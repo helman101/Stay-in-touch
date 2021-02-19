@@ -1,62 +1,36 @@
 module FriendshipsHelper
-  def friendship_exist?(user, friend)
-    Friendship.where(requestor_id: user, requested_id: friend, status: false).first
+  def make_request(user)
+    return 'Waiting for response' if current_user.pending_friends.exists?(user)
+
+    return 'You are friends' if current_user.friends.exists?(user)
+
+    can_request(current, user) unless current_user.pending_friends.exists?(user)
   end
 
-  def friendship(user, friend)
-    Friendship.where(requestor_id: user, requested_id: friend).first
+  def can_request(user)
+    link_to 'Request Friendship',
+            friendships_path(requestor_id: current_user.id, requested_id: user),
+            method: :create,
+            class: 'friend'
   end
 
-  def status?(user, friend)
-    friendship = Friendship.where(requestor_id: user, requested_id: friend).first
-    return false if friendship.nil?
+  def accept_request(user)
+    return unless current_user.friend_requests.exists?(user)
 
-    friendship.status
+    friendship = Friendship.find(requestor_id: current_user.id, requested_id: user)
+    link_to 'Accept request',
+            friendship_path(id: friendship.id, requested_id: user),
+            method: :patch,
+            class: 'friend'
   end
 
-  def requestor?(requestor)
-    current_user.requestors.exists?(requestor)
-  end
+  def cancel_request(user)
+    return unless current_user.friend_requests.exists?(user)
 
-  def different_user(current, user)
-    render partial: 'friend', locals: { friend: user } unless current == user
-  end
-
-  def make_request(current, user)
-    return 'Waiting for response' if friendship_exist?(current, user) && current != user
-
-    return 'You are friends' if status?(current, user) && current != user
-
-    can_request(current, user) if current != user
-  end
-
-  # rubocop:disable Style/GuardClause
-
-  def can_request(current, user)
-    if !friendship_exist?(current, user) && !friendship_exist?(user, current)
-      link_to 'Request Friendship',
-              friendships_path(requestor_id: current, requested_id: user),
-              method: :create,
-              class: 'friend'
-    end
-  end
-
-  def accept_request(current, user)
-    if requestor?(user) && !status?(current, user)
-      link_to 'Accept request',
-              friendship_path(id: friendship(user, current).id, requested_id: user),
-              method: :patch,
-              class: 'friend'
-    end
-  end
-
-  def cancel_request(current, user)
-    if requestor?(user) && !status?(current, user)
-      link_to 'Reject request',
-              friendship_path(id: friendship(user, current).id),
-              method: :delete,
-              class: 'btn-danger'
-    end
+    friendship = Friendship.find(requestor_id: current_user.id, requested_id: user)
+    link_to 'Reject request',
+            friendship_path(id: friendship.id),
+            method: :delete,
+            class: 'btn-danger'
   end
 end
-# rubocop:enable Style/GuardClause
