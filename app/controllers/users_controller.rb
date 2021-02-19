@@ -12,8 +12,7 @@ class UsersController < ApplicationController
   end
 
   def are_friends?(user, friend, posts)
-    if Friendship.exists?(requestor_id: user,
-                          requested_id: friend, status: true) || user == friend
+    if current_user.friends.exists?(friend) || user == friend
       render posts
     else
       'Only friends can see posts'

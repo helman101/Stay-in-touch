@@ -4,8 +4,8 @@
     <%= link_to 'See Profile',  user_path(user), class: 'profile-link' %>
   </span>
   <span class="waiting" >
-    <%= make_request(friend) %>
+    <%= make_request(user.id) %>
   </span>
-    <%= accept_request(friend) %>
-    <%= cancel_request(friend) %>
+    <%= accept_request(user.id) %>
+    <%= cancel_request(user.id) %>
 </li>
