@@ -13,7 +13,11 @@ describe User, type: :model do
     it { should have_many(:likes) }
     it { should have_many(:liked_posts).through(:likes) }
     it { should have_many(:friendships) }
-    it { should have_many(:requestors).through(:friendships) }
-    it { should have_many(:friends).through(:friendships) }
+    it { should have_many(:confirmed_friendships).class_name('Friendship') }
+    it { should have_many(:friends).through(:confirmed_friendships).source(:requested) }
+    it { should have_many(:pending_friendships).class_name('Friendship') }
+    it { should have_many(:pending_friends).through(:pending_friendships).source(:requested) }
+    it { should have_many(:inverted_friendships).class_name('Friendship') }
+    it { should have_many(:friend_requests).through(:inverted_friendships).source(:requestor) }
   end
 end

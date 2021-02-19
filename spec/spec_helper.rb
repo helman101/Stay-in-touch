@@ -111,4 +111,6 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+
+  config.example_status_persistence_file_path = 'spec/examples.txt'
 end
