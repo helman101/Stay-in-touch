@@ -4,6 +4,10 @@
 
 > A basic social media page where you can write post, like post, send friend invitations and comment posts
 
+## Live Link
+
+[Social media Website](https://peaceful-harbor-57366.herokuapp.com/users/sign_in)
+
 ## ERD Diagram
 
 ![screenshot](./docs/ERDdiagram2.png)
