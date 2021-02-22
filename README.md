@@ -64,9 +64,9 @@ Open `http://localhost:3000/` in your browser.
 
 ### Run tests
 
-```
-    rpsec
-```
+- install ChromeDriver `sudo apt-get install chromium-chromedriver`
+- Run tests `rspec`
+
 
 ## Authors
 
