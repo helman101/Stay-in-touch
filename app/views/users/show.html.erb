@@ -1,9 +1,14 @@
 <section class="user-section">
   <h2><%= "Name: #{@user.name}" %></h2>
+  <span class="waiting" >
+    <%= make_request(@user.id) %>
+  </span>
+    <%= accept_request(@user.id) %>
+    <%= cancel_request(@user.id) %>
   <article class="timeline">
     <h3>Recent posts:</h3>
     <ul class="posts">
-      <%= render @posts %>
+      <%= are_friends?(current_user.id, @user.id, @posts) %>
     </ul>
   </article>
 </section>
