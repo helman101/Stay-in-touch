@@ -11,25 +11,21 @@ class FriendshipsController < ApplicationController
   end
 
   def update
-    new_friendship = Friendship.new(requestor_id: current_user.id, requested_id: params[:requested_id], status: true)
     friendship = Friendship.find(params[:id])
-    friendship.status = true
-    if new_friendship.save && friendship.save
-      redirect_to users_path, notice: 'Now you\'re friends'
-    else
-      redirect_to users_path, alert: 'This user is already your friend'
-    end
+    friendship.confirm_friend
+
+    redirect_to users_path
   end
 
   def destroy
     friendship = Friendship.find(params[:id])
     if friendship
       friendship.destroy
-      redirect_to users_path, notice: if current_user.id == params[:requested_id]
-                                        'You reject this friendship'
-                                      else
-                                        'You cancel the friend request'
-                                      end
+      redirect_to users_path, alert: if current_user.id == params[:requested_id]
+                                       'You cancel the friend request'
+                                     else
+                                       'You reject this friendship'
+                                     end
     else
       redirect_to users_path, alert: 'You cannot reject this user'
     end
